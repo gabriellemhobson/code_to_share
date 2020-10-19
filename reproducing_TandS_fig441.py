@@ -14,16 +14,17 @@ rho = 2900 # kg m^-3
 c = 1.2 * 1000 # kJ kg^-1 K^-1 converted to J kg^-1 K^-1
 kappa = 0.5 * 1e-6 # mm^2 s^-1 converted to m^2 s^-1
 
-t1 = 100*24*60*60
-t2 = 1000*24*60*60
-
 def temp(Q,rho,c,kappa,y,t):
     T = (Q / (2*rho*c*np.sqrt(np.pi*kappa*t))) * (np.exp(-y**2 /(4*kappa*t)))
     return T
 
+def time(t):
+    # convert time from days to seconds
+    ts = t*24*60*60;
+    return ts
 
-plt.plot(y,temp(Q,rho,c,kappa,y,t1))
-plt.plot(y,temp(Q,rho,c,kappa,y,t2))
+plt.plot(y,temp(Q,rho,c,kappa,y,time(100)))
+plt.plot(y,temp(Q,rho,c,kappa,y,time(1000)))
 
 fs = 14
 plt.legend(['t = 100 days','t = 1000 days'])
@@ -40,11 +41,6 @@ plt.show()
 # making a video of the solution changing with time
 
 if animate == 1:
-    
-    def time(t):
-        # convert time from days to seconds
-        ts = t*24*60*60;
-        return ts
 
     fs = 14
     t = np.arange(50,1001,1)
