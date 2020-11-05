@@ -3,20 +3,17 @@
 
 clear all;close all;
 
-plt=1; % do you want to plot or not
+plt=0; % do you want to plot or not
 
 n = 2^11;
 Lx = 1e7; % length of x domain in m
-Ly = 1e7; % length of x domain in m
 Lz = 1e5; % length of z domain in m
 x = linspace(-Lx/2,Lx/2,n);
-y = linspace(-Ly/2,Ly/2,n);
+y = linspace(-Lx/2,Lx/2,n);
 z = linspace(0,Lz,n);
 
-dx = Lx/n; %???
-
-kx = (-n/2:n/2-1)/Lx;
-ky = (-n/2:n/2-1)/Ly;
+kx = -n/2:n/2-1;
+ky = -n/2:n/2-1;
 
 vx = 10/100/(365*24*60*60); % cm/yr to m/s 
 vy = 0; %assuming 1d plate motion
@@ -38,21 +35,18 @@ if plt == 1
     xlim([-1e6 1e6])
     ylim([0 1])
     xlabel('x (m)','FontSize',fs)
-    ylabel('q (W m^2)','FontSize',fs)
+    ylabel('W m^2','FontSize',fs)
     title('Heat source','FontSize',fs)
 end
 
 % take fourier transform of heat source fcn
-Q = fftshift(fft2(fftshift(q)));
+Q = fftshift(fft2(q));
 
 % plot fft of heat source fcn
 figure
-plot(kx,Q,'LineWidth',lw)
-%xlim([-1e6 1e6])
-%ylim([0 1])
-xlabel('kx','FontSize',fs)
-ylabel('Q','FontSize',fs)
-title('Heat source in wavenumber domain','FontSize',fs)
+plot(kx,Q)
+
+
 
 
 % define p
@@ -60,9 +54,7 @@ p = sqrt( (kx.*kx + ky.*ky) - 1i*(vx.*kx+vy.*ky)/(2*pi*kappa));
 
 %remove singularity in p
 sing = find(p==0);
-p(sing) = p(sing+1); % I don't like this. 
-                     % I'm going to think of something better
-
+p(sing) = p(sing+1);
 
 % z0 = 1i*p; % so many questions about this???
 
